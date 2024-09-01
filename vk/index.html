@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>js drum kit</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="keys">
+        <div data-key="65" class="key">
+            <kbd>a</kbd>
+            <span class="sound">clap</span>
+        </div>
+        <div data-key="83" class="key">
+            <kbd>s</kbd>
+            <span class="sound">hihat</span>
+        </div>
+        <div data-key="68" class="key">
+            <kbd>d</kbd>
+            <span class="sound">kick</span>
+        </div>
+        <div data-key="70" class="key pLAYING">
+            <kbd>f</kbd>
+            <span class="sound">openhat</span>
+        </div>
+        <div data-key="71" class="key">
+            <kbd>g</kbd>
+            <span class="sound">boom</span>
+        </div>
+        <div data-key="72" class="key">
+            <kbd>h</kbd>
+            <span class="sound">ride</span>
+        </div>
+        <div data-key="74" class="key">
+            <kbd>j</kbd>
+            <span class="sound">snare</span>
+        </div>
+        <div data-key="75" class="key">
+            <kbd>k</kbd>
+            <span class="sound">tom</span>
+        </div>
+        <div data-key="76" class="key">
+            <kbd>l</kbd>
+            <span class="sound">tink</span>
+        </div>
+    </div>
+    <audio data-key="65" src="sounds_clap.wav"></audio>
+    <audio data-key="83" src="sounds_hihat.wav"></audio>
+    <audio data-key="68" src="sounds_kick.wav"></audio>
+    <audio data-key="70" src="sounds_openhat.wav"></audio>
+    <audio data-key="71" src="sounds_boom.wav"></audio>
+    <audio data-key="72" src="sounds_ride.wav"></audio>
+    <audio data-key="74" src="sounds_snare.wav"></audio>
+    <audio data-key="75" src="sounds_tom.wav"></audio>
+    <audio data-key="76" src="sounds_tink.wav"></audio>
+    <script>
+       function playSound(e) {
+    const audio = document.querySelector(`audio[data-key="${e.keyCode}"]`);
+    const key = document.querySelector(`.key[data-key="${e.keyCode}"]`);
+    if(!audio) return; //stop running the function all together
+    audio.currentTime = 0; //rewind to the start
+    audio.play();
+    key.classList.add('playing');
+}
+
+function removeTransition(e) {
+if(e.propertyName !== 'transform') return; //Skip it if it is not a transform
+this.classList.remove('playing')
+}
+
+const keys = document.querySelectorAll('.key');
+keys.forEach(key => key.addEventListener('transitionend', removeTransition));
+window.addEventListener('keydown', playSound);
+
+
+// Click + touch function
+
+keys.forEach(key => key.addEventListener("click", function(e) {
+      let value = key.getAttribute("data-key");
+      const audio = document.querySelector(`audio[data-key="${value}"]`);
+      const key_data = document.querySelector(`div[data-key="${value}"]`);
+      if (audio) {
+        key_data.classList.add("playing");
+        audio.currentTime = 0;
+        audio.play();
+      }
+    })
+  );
+    </script>
+</body>
+</html>
